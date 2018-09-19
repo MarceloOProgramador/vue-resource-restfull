@@ -10,7 +10,11 @@
 
 <script>
 export default {
-
+    data () {
+        return {
+            title : "Produtos"
+        }
+    }
 }
 </script>
 
