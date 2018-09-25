@@ -46,22 +46,6 @@
 
         </table>
 
-        <ul class="pagination">
-
-            <li v-if="(products.current_page - 1) >= 1"  class="page-item">
-
-                <a href="#" class="page-link"> Prev </a>
-
-            </li>
-
-            <li class="page-item" v-if="(products.current_page + 1) < products.last_page">
-
-                <a href="#" class="page-link"> Next </a>
-
-            </li>
-
-        </ul>
-
         <div v-if="loading">
 
             <figure>
@@ -72,45 +56,74 @@
             
         </div>
 
+        <pagination-component :pagination="products" :offset="offset" @paginate="getProducts"></pagination-component>
+
+        <!-- <ul class="pagination">
+
+            <li v-show="products.current_page - 1 >= 1"  class="page-item">
+
+                <a href="#" class="page-link" @click.prevent="pagination(products.current_page - 1)"> Prev </a>
+
+            </li>
+
+            <li v-show="products.current_page + 1 < products.last_page" class="page-item">
+
+                <a href="#" class="page-link" @click.prevent="pagination(products.current_page + 1)"> Next </a>
+
+            </li>
+
+        </ul> -->
+
     </div>
 
 </template>
 
 <script>
+import PaginationComponent from "../Acessories/PaginationComponent"
+
 export default {
+    
     data () {
         return {
             title : "Produtos",
             products : {
 
                 current_page : 1,
-                last_page : 1,
-
+                last_page : 1
 
             },
-            loading: false
+            loading: false,
+            offset : 4
+
         }
     },
-
     created () {
 
-        this.getproducts();
+        this.getProducts();
 
     },
     methods : {
 
-        getproducts() {
+        getProducts() {
 
             this.loading = true
 
-            this.$http.get("http://laravel55-webservice.localhost/api/v1/products").then(response => {
+            this.$http.get("http://laravel55-webservice.localhost/api/v1/products?page="+this.products.current_page).then(response => {
                 this.products = response.body;
             },error => {
                 console.log(error);
             }).finally(() => this.loading = false)
 
-        }
+        },
+        pagination(n){
 
+            this.products.current_page = n;
+            this.getProducts();
+
+        }
+    },
+    components : {
+        PaginationComponent
     }
 }
 </script>
