@@ -3,6 +3,14 @@
     <div>
 
         <h1>{{title}}</h1>
+
+        <div class="row">
+           <div class="col">
+
+                <router-link to="product/create" class="btn btn-success btn-create">+ Criar</router-link>
+
+           </div>
+        </div>
         
         <table class="table">
 
@@ -133,6 +141,12 @@ export default {
 .loading {
 
     max-width: 70px;
+
+}
+
+.btn-create {
+
+    margin:  15px 0px;
 
 }
 
