@@ -4,6 +4,8 @@
 
         <h1>{{title}}</h1>
 
+        <p>Total: {{products.total}}</p>
+
         <div class="row">
            <div class="col">
 
@@ -64,7 +66,7 @@
             
         </div>
 
-        <pagination-component :pagination="products" :offset="offset" @paginate="getProducts"></pagination-component>
+        <pagination-component :pagination="products" :offset="offset" @paginate="pagination"></pagination-component>
 
         <!-- <ul class="pagination">
 
