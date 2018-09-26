@@ -56,15 +56,7 @@
 
         </table>
 
-        <div v-if="loading">
-
-            <figure>
-
-                <img src="../../assets/loading.gif" alt="Loading image" class="loading">
-
-            </figure>
-            
-        </div>
+        <loading-component :loading="loading"></loading-component>
 
         <pagination-component :pagination="products" :offset="offset" @paginate="pagination"></pagination-component>
 
@@ -90,6 +82,7 @@
 
 <script>
 import PaginationComponent from "../Acessories/PaginationComponent"
+import LoadingComponent from "../Acessories/LoadingComponent"
 
 export default {
     
@@ -133,18 +126,13 @@ export default {
         }
     },
     components : {
-        PaginationComponent
+        PaginationComponent,
+        LoadingComponent
     }
 }
 </script>
 
 <style scoped>
-
-.loading {
-
-    max-width: 70px;
-
-}
 
 .btn-create {
 
