@@ -2,7 +2,26 @@
 
     <div>
 
-        <h1>{{title}}</h1>
+        <div class="row">
+
+            <div class="col">
+
+                <h1>{{title}}</h1>
+
+            </div>
+
+            <div class="col">
+
+                <form @submit.prevent="searchProduct()" class="form-inline">
+
+                    <input type="text" class="form-control" v-model="filter">
+                    <button class="btn btn-default">Pesquisar</button>
+
+                </form>
+
+            </div>
+
+        </div>
 
         <p>Total: {{products.total}}</p>
 
@@ -44,9 +63,9 @@
 
                     <td>
 
-                        <a href="#" class="btn btn-info">editar</a>
+                        <router-link :to="{name : 'productEdit', params : {id : product.id}}" class="btn btn-info">Editar</router-link>
 
-                        <a href="#" class="btn btn-danger">Deletar</a>
+                        <a href="#" @click="deleteProduct(product.id)" class="btn btn-danger">Deletar</a>
 
                     </td>
 
@@ -96,7 +115,8 @@ export default {
 
             },
             loading: false,
-            offset : 4
+            offset : 4,
+            filter : ""
 
         }
     },
@@ -111,7 +131,7 @@ export default {
 
             this.loading = true
 
-            this.$http.get("http://laravel55-webservice.localhost/api/v1/products?page="+this.products.current_page).then(response => {
+            this.$http.get("http://laravel55-webservice.localhost/api/v1/products?page="+this.products.current_page+"&filter="+this.filter).then(response => {
                 this.products = response.body;
             },error => {
                 console.log(error);
@@ -123,6 +143,28 @@ export default {
             this.products.current_page = n;
             this.getProducts();
 
+        },
+        deleteProduct(p){
+
+            this.loading = true;
+
+            if( confirm("Deseja mesmo excluir este produto?")){
+
+                this.$http.delete(`http://laravel55-webservice.localhost/api/v1/products/${p}`).then( response => {
+                
+                    this.getProducts();
+
+                }, error => {
+                    console.log(error)
+                }).finally( () => this.loading = false); 
+
+            }
+
+        },
+        searchProduct(){
+
+            this.getProducts();
+            
         }
     },
     components : {

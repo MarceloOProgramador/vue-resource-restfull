@@ -4,7 +4,7 @@
 
         <h1 v-text="title"></h1>
 
-        <form class="form" @submit.prevent="createProduct">
+        <form class="form" @submit.prevent="updateProduct">
 
             <div class="form-group">
 
@@ -34,7 +34,7 @@
 
             <loading-component :loading="loading"></loading-component>
 
-            <button class="btn btn-success">Cadastrar</button>
+            <button class="btn btn-success">Atualizar</button>
 
         </form>
 
@@ -47,7 +47,15 @@
 import LoadingComponent from "../Acessories/LoadingComponent"
 
 export default {
+    props : {
 
+        id : {
+
+            required : true,
+
+        }
+
+    },
     data () {
 
         return {
@@ -60,22 +68,45 @@ export default {
         }
 
     },
+    created () {
+
+        this.getProduct();
+
+    },
     methods : {
 
-        createProduct(){
+        getProduct(){
+
             this.loading = true
 
-            this.$http.post("http://laravel55-webservice.localhost/api/v1/products", this.product).then(response => {
+            this.$http.get("http://laravel55-webservice.localhost/api/v1/products/" + this.id).then(response => {
 
-                // console.log(response);
-                this.$router.push('/product');
+                this.product = response.body;
 
+            },error => {
+
+                if(error.status === 404) {
+
+                    alert("Product Not Found");
+                    this.$router.push('/product')
+
+                }
+                    
+            }).finally(() => this.loading = false);
+
+        },
+        updateProduct(){
+
+            this.loading = true
+
+            this.$http.put("http://laravel55-webservice.localhost/api/v1/products/" + this.id, this.product).then(response => {
+                this.$router.push("/product");
             },error => {
 
                 if(error.status === 422) 
                     this.errorsMessages = error.body.errors;
 
-            }).finally(() => this.loading = false);
+            }).finally( () => this.loading = false );
 
         }
 
